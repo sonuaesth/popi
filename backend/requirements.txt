@@ -1,0 +1,14 @@
+fastapi
+uvicorn[standard]
+sqlalchemy>=2,<2.1
+psycopg[binary]
+alembic
+pydantic-settings
+pyjwt[crypto]
+passlib[bcrypt]
+python-multipart
+openai
+pytest
+httpx
+email-validator
+bcrypt<4
