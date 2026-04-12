@@ -24,4 +24,10 @@ class User(Base):
         cascade="all, delete-orphan",
     )
 
+    recipe_ratings = relationship(
+        "RecipeRating",
+        back_populates="user",
+        cascade="all, delete-orphan",
+    )
+
 

@@ -40,3 +40,10 @@ class MealPlanItem(Base):
     estimated_minutes: Mapped[int | None] = mapped_column(nullable=True)
 
     meal_plan = relationship("MealPlan", back_populates="items")
+
+    ratings = relationship(
+        "RecipeRating",
+        back_populates="meal_plan_item",
+        cascade="all, delete-orphan",
+    )
+
