@@ -18,3 +18,10 @@ class User(Base):
         cascade="all, delete-orphan",
     )
 
+    meal_plans = relationship(
+        "MealPlan",
+        back_populates="user",
+        cascade="all, delete-orphan",
+    )
+
+
