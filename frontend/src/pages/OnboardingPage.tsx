@@ -1,9 +1,9 @@
 import { useEffect, useRef, useState } from "react";
 import type { CSSProperties, PointerEvent } from "react";
+import { useNavigate } from "react-router-dom";
 
-import { generateMealPlan, getMealPlans } from "../api/mealPlans";
 import { getPreferences, updatePreferences } from "../api/preferences";
-import type { MealPlan, User, UserPreferences } from "../types/api";
+import type { User, UserPreferences } from "../types/api";
 
 type OnboardingStep = "basics" | "products" | "cuisines" | "complete";
 
@@ -143,6 +143,7 @@ function preferencesToForm(preferences: UserPreferences): PreferencesForm {
 }
 
 function OnboardingPage({ user, onLogout }: OnboardingPageProps) {
+  const navigate = useNavigate();
   const [message, setMessage] = useState("");
   const [preferences, setPreferences] = useState<UserPreferences | null>(null);
   const [preferencesForm, setPreferencesForm] =
@@ -151,7 +152,6 @@ function OnboardingPage({ user, onLogout }: OnboardingPageProps) {
     useState<OnboardingStep>("basics");
   const [productIndex, setProductIndex] = useState(0);
   const [cuisineIndex, setCuisineIndex] = useState(0);
-  const [mealPlans, setMealPlans] = useState<MealPlan[]>([]);
   const [dragStartX, setDragStartX] = useState<number | null>(null);
   const [dragOffsetX, setDragOffsetX] = useState(0);
   const [isDragging, setIsDragging] = useState(false);
@@ -347,32 +347,8 @@ function OnboardingPage({ user, onLogout }: OnboardingPageProps) {
     }
   }
 
-  async function handleGenerateMealPlan() {
-    setMessage("");
-
-    try {
-      const mealPlan = await generateMealPlan();
-      setMealPlans((currentMealPlans) => [mealPlan, ...currentMealPlans]);
-      setMessage("Meal plan generated");
-    } catch (error) {
-      setMessage(
-        error instanceof Error ? error.message : "Could not generate meal plan",
-      );
-    }
-  }
-
-  async function handleLoadMealPlans() {
-    setMessage("");
-
-    try {
-      const data = await getMealPlans();
-      setMealPlans(data);
-      setMessage("Meal plans loaded");
-    } catch (error) {
-      setMessage(
-        error instanceof Error ? error.message : "Could not load meal plans",
-      );
-    }
+  function handleGenerateMealPlan() {
+    navigate("/", { state: { generateMealPlan: true } });
   }
 
   return (
@@ -382,8 +358,8 @@ function OnboardingPage({ user, onLogout }: OnboardingPageProps) {
           <p className="eyebrow">Preferences</p>
           <h1 className="brand-title">Build your plate.</h1>
           <p className="brand-copy">
-            Hi, {user.email}. Tell Popi your basics first, then generate a meal
-            plan that fits your routine.
+            Hi, {user.name || user.email}. Tell Popi your basics first, then
+            generate a meal plan that fits your routine.
           </p>
           <button
             className="button button-ghost preferences-logout"
@@ -703,44 +679,24 @@ function OnboardingPage({ user, onLogout }: OnboardingPageProps) {
                 >
                   Save preferences
                 </button>
+              </div>
+
+              <div className="generate-plan-cta">
                 <button
-                  className="button button-secondary"
+                  className="button button-primary generate-plan-button"
                   type="button"
                   onClick={handleGenerateMealPlan}
                   disabled={!preferences}
                 >
                   Generate meal plan
                 </button>
-                <button
-                  className="button button-ghost"
-                  type="button"
-                  onClick={handleLoadMealPlans}
-                >
-                  Load meal plans
-                </button>
+                <p>Popi will open your dashboard when the plan is ready.</p>
               </div>
             </>
           )}
 
           {message && <p className="status-message">{message}</p>}
 
-          {mealPlans.length > 0 && (
-            <section className="meal-preview">
-              <h3>Latest plans</h3>
-              {mealPlans.map((mealPlan) => (
-                <article className="meal-preview-card" key={mealPlan.id}>
-                  <p className="eyebrow">Plan #{mealPlan.id}</p>
-                  <h4>{mealPlan.title}</h4>
-                  <p>{mealPlan.notes}</p>
-                  <ul>
-                    {mealPlan.items.map((item) => (
-                      <li key={item.id}>{item.recipe_name}</li>
-                    ))}
-                  </ul>
-                </article>
-              ))}
-            </section>
-          )}
         </div>
       </section>
     </main>

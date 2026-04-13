@@ -1,6 +1,7 @@
 export type User = {
   id: number;
   email: string;
+  name: string | null;
 };
 
 export type LoginPayload = {
@@ -11,6 +12,7 @@ export type LoginPayload = {
 export type RegisterPayload = {
   email: string;
   password: string;
+  name?: string | null;
 };
 
 export type TokenResponse = {
