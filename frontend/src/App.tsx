@@ -1,19 +1,16 @@
 import { useState } from "react";
 import type { SubmitEventHandler } from "react";
 
-import { generateMealPlan, getMealPlans } from "./api/mealPlans";
 import { getMe, loginUser, registerUser } from "./api/auth";
-import { getPreferences } from "./api/preferences";
 import { clearToken } from "./api/client";
-import type { MealPlan, User, UserPreferences } from "./types/api";
+import OnboardingPage from "./pages/OnboardingPage";
+import type { User } from "./types/api";
 
 function App() {
   const [email, setEmail] = useState("user3@example.com");
   const [password, setPassword] = useState("text1");
   const [user, setUser] = useState<User | null>(null);
   const [message, setMessage] = useState("");
-  const [preferences, setPreferences] = useState<UserPreferences | null>(null);
-  const [mealPlans, setMealPlans] = useState<MealPlan[]>([]);
 
   const handleLogin: SubmitEventHandler<HTMLFormElement> = async (event) => {
     event.preventDefault();
@@ -34,10 +31,12 @@ function App() {
     setMessage("");
 
     try {
-      const createdUser = await registerUser({ email, password });
+      await registerUser({ email, password });
+      await loginUser({ email, password });
+      const currentUser = await getMe();
 
-      setUser(createdUser);
-      setMessage("Registered successfully. You can log in now.");
+      setUser(currentUser);
+      setMessage("Account created. Tell Popi what you like to eat.");
     } catch (error) {
       setMessage(error instanceof Error ? error.message : "Registration failed");
     }
@@ -46,51 +45,11 @@ function App() {
   function handleLogout() {
     clearToken();
     setUser(null);
-    setPreferences(null);
-    setMealPlans([]);
     setMessage("Logged out");
   }
 
-  async function handleLoadPreferences() {
-    setMessage("");
-
-    try {
-      const data = await getPreferences();
-      setPreferences(data);
-      setMessage("Preferences loaded");
-    } catch (error) {
-      setMessage(
-        error instanceof Error ? error.message : "Could not load preferences",
-      );
-    }
-  }
-
-  async function handleGenerateMealPlan() {
-    setMessage("");
-
-    try {
-      const mealPlan = await generateMealPlan();
-      setMealPlans((currentMealPlans) => [mealPlan, ...currentMealPlans]);
-      setMessage("Meal plan generated");
-    } catch (error) {
-      setMessage(
-        error instanceof Error ? error.message : "Could not generate meal plan",
-      );
-    }
-  }
-
-  async function handleLoadMealPlans() {
-    setMessage("");
-
-    try {
-      const data = await getMealPlans();
-      setMealPlans(data);
-      setMessage("Meal plans loaded");
-    } catch (error) {
-      setMessage(
-        error instanceof Error ? error.message : "Could not load meal plans",
-      );
-    }
+  if (user) {
+    return <OnboardingPage user={user} onLogout={handleLogout} />;
   }
 
   return (
@@ -141,62 +100,10 @@ function App() {
               >
                 Register
               </button>
-              <button
-                className="button button-ghost"
-                type="button"
-                onClick={handleLogout}
-              >
-                Log out
-              </button>
             </div>
           </form>
 
           {message && <p className="status-message">{message}</p>}
-
-          {user && (
-            <section className="user-card">
-              <h3>Current user</h3>
-              <pre>{JSON.stringify(user, null, 2)}</pre>
-
-              <div className="button-row">
-                <button
-                  className="button button-secondary"
-                  type="button"
-                  onClick={handleLoadPreferences}
-                >
-                  Load preferences
-                </button>
-                <button
-                  className="button button-secondary"
-                  type="button"
-                  onClick={handleGenerateMealPlan}
-                >
-                  Generate meal plan
-                </button>
-                <button
-                  className="button button-ghost"
-                  type="button"
-                  onClick={handleLoadMealPlans}
-                >
-                  Load meal plans
-                </button>
-              </div>
-
-              {preferences && (
-                <>
-                  <h3>Preferences</h3>
-                  <pre>{JSON.stringify(preferences, null, 2)}</pre>
-                </>
-              )}
-
-              {mealPlans.length > 0 && (
-                <>
-                  <h3>Meal plans</h3>
-                  <pre>{JSON.stringify(mealPlans, null, 2)}</pre>
-                </>
-              )}
-            </section>
-          )}
         </div>
       </section>
     </main>

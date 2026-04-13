@@ -19,7 +19,12 @@ class UserPreferences(Base):
     favorite_products: Mapped[list[str]] = mapped_column(JSONB, default=list)
     excluded_products: Mapped[list[str]] = mapped_column(JSONB, default=list)
     preferred_cuisines: Mapped[list[str]] = mapped_column(JSONB, default=list)
+    allergies: Mapped[list[str]] = mapped_column(JSONB, default=list)
 
+    weight_kg: Mapped[int | None] = mapped_column(Integer, nullable=True)
+    activity_level: Mapped[str] = mapped_column(String(50), default="moderate")
+    diet_type: Mapped[str] = mapped_column(String(50), default="balanced")
+    goal: Mapped[str] = mapped_column(String(100), default="balanced nutrition")
     cooking_difficulty: Mapped[str] = mapped_column(String(50), default="easy")
     meals_per_day: Mapped[int] = mapped_column(Integer, default=3)
 

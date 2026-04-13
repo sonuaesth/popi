@@ -25,6 +25,11 @@ export type UserPreferences = {
   favorite_products: string[];
   excluded_products: string[];
   preferred_cuisines: string[];
+  allergies: string[];
+  weight_kg: number | null;
+  activity_level: string;
+  diet_type: string;
+  goal: string;
   cooking_difficulty: string;
   meals_per_day: number;
 };
@@ -34,6 +39,11 @@ export type UserPreferencesPayload = {
   favorite_products?: string[];
   excluded_products?: string[];
   preferred_cuisines?: string[];
+  allergies?: string[];
+  weight_kg?: number | null;
+  activity_level?: string;
+  diet_type?: string;
+  goal?: string;
   cooking_difficulty?: string;
   meals_per_day?: number;
 };
