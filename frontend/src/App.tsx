@@ -1,7 +1,7 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Navigate, Route, Routes, useNavigate } from "react-router-dom";
-
-import { clearToken } from "./api/client";
+import { getMe } from "./api/auth";
+import { clearToken, getToken } from "./api/client";
 import LoginPage from "./pages/LoginPage";
 import OnboardingPage from "./pages/OnboardingPage";
 import DashboardPage from "./pages/DashboardPage";
@@ -12,12 +12,45 @@ import type { User } from "./types/api";
 
 function App() {
   const [user, setUser] = useState<User | null>(null);
+  const [isAuthLoading, setIsAuthLoading] = useState(true);
+
   const navigate = useNavigate();
+  useEffect(() => {
+  async function restoreUser() {
+    const token = getToken();
+
+    if (!token) {
+      setIsAuthLoading(false);
+      return;
+    }
+
+    try {
+      const currentUser = await getMe();
+      setUser(currentUser);
+    } catch {
+      clearToken();
+      setUser(null);
+    } finally {
+      setIsAuthLoading(false);
+    }
+  }
+
+  void restoreUser();
+}, []);
+
 
   function handleLogout() {
     clearToken();
     setUser(null);
     navigate("/login");
+  }
+
+  if (isAuthLoading) {
+  return (
+    <main className="app-shell">
+      <p className="status-message">Loading...</p>
+    </main>
+  );
   }
 
   if (!user) {

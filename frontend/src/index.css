@@ -39,7 +39,8 @@ body {
 
 button,
 input,
-select {
+select,
+textarea {
   font: inherit;
 }
 
@@ -390,10 +391,118 @@ button {
   display: flex;
   flex-wrap: wrap;
   gap: 12px;
+  margin-top: 28px;
 }
 
 .profile-main-actions .button {
   min-width: 180px;
+}
+
+.food-profile-summary,
+.food-preferences-summary {
+  display: grid;
+  gap: 18px;
+  margin: 26px 0;
+  padding: 22px;
+  border: 1px solid var(--color-border);
+  border-radius: 24px;
+  background: rgba(255, 255, 255, 0.58);
+}
+
+.food-profile-summary-heading .eyebrow {
+  margin: 0 0 10px;
+  color: var(--color-cocoa);
+}
+
+.food-profile-summary h3,
+.food-preferences-summary h3 {
+  margin: 0;
+  color: var(--color-plum);
+  font-family: var(--font-body);
+  font-size: 2rem;
+  line-height: 1;
+}
+
+.food-profile-summary dl {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+  margin: 0;
+}
+
+.food-profile-summary dl div {
+  display: grid;
+  gap: 4px;
+  border: 1px solid rgba(59, 57, 35, 0.14);
+  border-radius: 14px;
+  padding: 12px 14px;
+  background: rgba(251, 247, 238, 0.72);
+}
+
+.food-profile-summary dt {
+  color: var(--color-muted);
+  font-size: 0.78rem;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.food-profile-summary dd {
+  margin: 0;
+  color: var(--color-ink);
+  font-weight: 800;
+}
+
+.editable-preferences-grid,
+.preference-list-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.preference-edit-field {
+  display: grid;
+  gap: 8px;
+  border: 1px solid rgba(59, 57, 35, 0.14);
+  border-radius: 14px;
+  padding: 14px;
+  color: var(--color-olive);
+  font-size: 0.82rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  background: rgba(251, 247, 238, 0.72);
+}
+
+.preference-edit-field input,
+.preference-edit-field select,
+.preference-edit-field textarea {
+  width: 100%;
+  border: 1px solid rgba(59, 57, 35, 0.18);
+  border-radius: 12px;
+  padding: 12px;
+  color: var(--color-ink);
+  background: rgba(255, 255, 255, 0.72);
+  outline: none;
+  text-transform: none;
+}
+
+.preference-edit-field textarea {
+  min-height: 92px;
+  resize: vertical;
+  line-height: 1.5;
+}
+
+.preference-edit-field input:focus,
+.preference-edit-field select:focus,
+.preference-edit-field textarea:focus {
+  border-color: var(--color-cocoa);
+  background: var(--color-cream-soft);
+  box-shadow: 0 0 0 4px rgba(93, 45, 9, 0.12);
+}
+
+.food-profile-empty {
+  margin: 0;
+  color: var(--color-muted);
+  line-height: 1.6;
 }
 
 .profile-bottom-actions {
@@ -874,6 +983,15 @@ button {
   .profile-main-actions .button,
   .profile-bottom-actions .button {
     width: 100%;
+  }
+
+  .food-profile-summary dl {
+    grid-template-columns: 1fr;
+  }
+
+  .editable-preferences-grid,
+  .preference-list-grid {
+    grid-template-columns: 1fr;
   }
 
   .app-nav {
