@@ -513,6 +513,20 @@ button {
   padding-left: 20px;
 }
 
+.rating-button {
+  min-width: 46px;
+  width: 46px;
+  padding: 0;
+  color: var(--color-olive);
+  background: var(--color-card-strong);
+}
+
+.rating-button.is-selected {
+  color: var(--color-cream-soft);
+  background: var(--color-plum);
+  box-shadow: var(--shadow-button);
+}
+
 .shopping-list-card {
   padding: 20px;
   border: 1px solid var(--color-border);

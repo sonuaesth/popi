@@ -112,6 +112,9 @@ function DashboardPage({ user, onLogout }: DashboardPageProps) {
           <Link to="/">Today</Link>
           <Link to="/ratings">Ratings</Link>
           <Link to="/profile">Profile</Link>
+          <button className="button button-ghost" type="button" onClick={onLogout}>
+            Log out
+          </button>
         </nav>
 
         <div className="form-heading">
