@@ -71,6 +71,11 @@ def generate_meal_plan(
         "favorite_products": preferences.favorite_products,
         "excluded_products": preferences.excluded_products,
         "preferred_cuisines": preferences.preferred_cuisines,
+        "allergies": preferences.allergies,
+        "weight_kg": preferences.weight_kg,
+        "activity_level": preferences.activity_level,
+        "diet_type": preferences.diet_type,
+        "goal": preferences.goal,
         "cooking_difficulty": preferences.cooking_difficulty,
         "meals_per_day": preferences.meals_per_day,
     }

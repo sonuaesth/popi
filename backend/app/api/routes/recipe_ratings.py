@@ -53,3 +53,14 @@ def rate_meal_plan_item(
     db.refresh(rating)
 
     return rating
+
+@router.get("/ratings/me", response_model=list[RecipeRatingRead])
+def get_my_ratings(
+    current_user: User = Depends(get_current_user),
+    db: Session = Depends(get_db),
+):
+    return (
+        db.query(RecipeRating)
+        .filter(RecipeRating.user_id == current_user.id)
+        .all()
+    )

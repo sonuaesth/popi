@@ -19,6 +19,7 @@ def create_user(payload: UserCreate, db: Session = Depends(get_db)):
 
     user = User(
         email=payload.email,
+        name=payload.name,
         hashed_password=hash_password(payload.password),
     )
 
