@@ -643,6 +643,24 @@ button {
   background: rgba(255, 255, 255, 0.58);
 }
 
+.shopping-list-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 18px;
+  margin-bottom: 18px;
+}
+
+.shopping-list-header .eyebrow {
+  margin-bottom: 8px;
+}
+
+.shopping-list-pdf-button {
+  flex: 0 0 auto;
+  min-height: 42px;
+  padding: 0 18px;
+}
+
 .shopping-list-card .eyebrow {
   margin: 0 0 10px;
   color: var(--color-cocoa);
@@ -1083,5 +1101,13 @@ button {
 
   .eyebrow {
     margin-bottom: 52px;
+  }
+  .shopping-list-header {
+  align-items: stretch;
+  flex-direction: column;
+  }
+
+  .shopping-list-pdf-button {
+    width: 100%;
   }
 }
