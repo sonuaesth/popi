@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-
+import jsPDF from "jspdf";
 import {
   generateMealPlan,
   getMealPlans,
@@ -104,6 +104,86 @@ function DashboardPage({ user, onLogout }: DashboardPageProps) {
     });
   }
 
+  function handleDownloadShoppingListPdf() {
+    if (!shoppingList || !mealPlan) {
+      return;
+    }
+
+    const doc = new jsPDF();
+    const margin = 16;
+    const pageHeight = doc.internal.pageSize.getHeight();
+    const pageWidth = doc.internal.pageSize.getWidth();
+    const columnGap = 10;
+    const columnWidth = (pageWidth - margin * 2 - columnGap) / 2;
+    const columnX = [margin, margin + columnWidth + columnGap];
+    const headerBottomY = 42;
+    const bottomY = pageHeight - 16;
+
+    let currentColumn = 0;
+    let y = 20;
+
+    function addText(
+      text: string,
+      size = 9,
+      font: "normal" | "bold" = "normal",
+      x = margin,
+      maxTextWidth = pageWidth - margin * 2,
+    ) {
+      doc.setFont("helvetica", font);
+      doc.setFontSize(size);
+
+      const lines = doc.splitTextToSize(text, maxTextWidth);
+
+      lines.forEach((line: string) => {
+        if (y > pageHeight - 16) {
+          doc.addPage();
+          y = 20;
+        }
+
+        doc.text(line, x, y);
+        y += size * 0.5;
+      });
+
+      y += 3;
+    }
+
+    addText("Popi shopping list", 14, "bold");
+    addText(mealPlan.title, 9, "normal");
+
+    y = headerBottomY;
+
+    shoppingList.items.forEach((item) => {
+      const sourceMeals = item.source_meals.join(", ");
+      const itemTitle = `${item.name}: ${item.amount} ${item.unit}`;
+      const titleLines = doc.splitTextToSize(itemTitle, columnWidth);
+      const sourceLines = sourceMeals
+        ? doc.splitTextToSize(`For: ${sourceMeals}`, columnWidth)
+        : [];
+      const itemHeight = titleLines.length * 4.5 + sourceLines.length * 4 + 6;
+
+      if (y + itemHeight > bottomY) {
+        if (currentColumn === 0) {
+          currentColumn = 1;
+          y = headerBottomY;
+        } else {
+          doc.addPage();
+          currentColumn = 0;
+          y = 20;
+        }
+      }
+
+      const x = columnX[currentColumn];
+
+      addText(itemTitle, 9, "bold", x, columnWidth);
+
+      if (sourceMeals) {
+        addText(`For: ${sourceMeals}`, 8, "normal", x, columnWidth);
+      }
+    });
+
+    doc.save("popi-shopping-list.pdf");
+  }
+
   return (
     <main className="app-shell">
       <section className="dashboard-page">
@@ -164,9 +244,21 @@ function DashboardPage({ user, onLogout }: DashboardPageProps) {
             </article>
 
             {shoppingList && (
-              <article className="shopping-list-card">
-                <p className="eyebrow">Shopping list</p>
-                <h4>For today's plan</h4>
+                <article className="shopping-list-card">
+                  <div className="shopping-list-header">
+                    <div>
+                      <p className="eyebrow">Shopping list</p>
+                      <h4>For today's plan</h4>
+                    </div>
+
+                    <button
+                      className="button button-ghost shopping-list-pdf-button"
+                      type="button"
+                      onClick={handleDownloadShoppingListPdf}
+                    >
+                      Save PDF
+                    </button>
+                  </div>
                 <ul>
                   {shoppingList.items.map((item) => {
                     const itemKey = getShoppingItemKey(item);
