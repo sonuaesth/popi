@@ -52,4 +52,7 @@ Rules:
 
     content = response.output_text
 
+    print("RAW AI RESPONSE:")
+    print(content)
+
     return json.loads(content)

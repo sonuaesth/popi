@@ -11,6 +11,7 @@ class User(Base):
     name: Mapped[str | None] = mapped_column(String(255), nullable=True)
     email: Mapped[str] = mapped_column(String(255), unique=True, index=True)
     hashed_password: Mapped[str] = mapped_column(String(255))
+    active_profile_mode: Mapped[str] = mapped_column(String(20), default="solo")
     
     preferences = relationship(
         "UserPreferences",
@@ -30,5 +31,13 @@ class User(Base):
         back_populates="user",
         cascade="all, delete-orphan",
     )
+
+    family_membership = relationship(
+        "FamilyMember",
+        back_populates="user",
+        uselist=False,
+        cascade="all, delete-orphan",
+    )
+
 
 
