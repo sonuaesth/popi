@@ -27,6 +27,8 @@ def get_user_preferences_dict(db: Session, user_id: int) -> dict | None:
         "diet_type": prefs.diet_type,
         "goal": prefs.goal,
         "weight_kg": prefs.weight_kg,
+        "servings": 1,
+        "planning_mode": "solo",
     }
 
 
@@ -56,4 +58,8 @@ def get_effective_preferences_for_user(db: Session, user: User) -> dict | None:
         .all()
     )
 
-    return aggregate_family_preferences(family_preferences)
+    aggregated_preferences = aggregate_family_preferences(family_preferences)
+    aggregated_preferences["servings"] = max(len(user_ids), 1)
+    aggregated_preferences["planning_mode"] = "family"
+
+    return aggregated_preferences
