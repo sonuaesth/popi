@@ -2,11 +2,13 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 
 import { getPreferences, updatePreferences } from "../api/preferences";
+import { updateMyMode } from "../api/users";
 import type { User, UserPreferences } from "../types/api";
 
 type ProfilePageProps = {
   user: User;
   onLogout: () => void;
+  onUserUpdate: (user: User) => void;
 };
 
 type PreferencesForm = {
@@ -64,12 +66,13 @@ function preferencesToForm(preferences: UserPreferences): PreferencesForm {
   };
 }
 
-function ProfilePage({ user, onLogout }: ProfilePageProps) {
+function ProfilePage({ user, onLogout, onUserUpdate }: ProfilePageProps) {
   const [preferences, setPreferences] = useState<UserPreferences | null>(null);
   const [preferencesForm, setPreferencesForm] =
     useState<PreferencesForm>(emptyPreferencesForm);
   const [message, setMessage] = useState("");
   const [isSaving, setIsSaving] = useState(false);
+  const [isUpdatingMode, setIsUpdatingMode] = useState(false);
 
   useEffect(() => {
     async function loadPreferences() {
@@ -122,6 +125,31 @@ function ProfilePage({ user, onLogout }: ProfilePageProps) {
     }
   }
 
+  async function handleModeChange(mode: "solo" | "family") {
+    if (user.active_profile_mode === mode) {
+      return;
+    }
+
+    setMessage("");
+    setIsUpdatingMode(true);
+
+    try {
+      const updatedUser = await updateMyMode(mode);
+      onUserUpdate(updatedUser);
+      setMessage(
+        mode === "family"
+          ? "Family mode is on"
+          : "Personal mode is on",
+      );
+    } catch (error) {
+      setMessage(
+        error instanceof Error ? error.message : "Could not update mode",
+      );
+    } finally {
+      setIsUpdatingMode(false);
+    }
+  }
+
   return (
     <main className="app-shell">
       <section className="dashboard-page profile-page">
@@ -129,6 +157,7 @@ function ProfilePage({ user, onLogout }: ProfilePageProps) {
           <strong>Popi</strong>
           <Link to="/">Today</Link>
           <Link to="/ratings">Ratings</Link>
+          <Link to="/family">Family</Link>
           <Link to="/profile">Profile</Link>
         </nav>
 
@@ -138,6 +167,54 @@ function ProfilePage({ user, onLogout }: ProfilePageProps) {
         </div>
 
         {user.name && <p className="profile-email">{user.email}</p>}
+
+        <section className="food-profile-summary">
+          <div className="food-profile-summary-heading">
+            <p className="eyebrow">Mode</p>
+            <h3>Choose your planning style</h3>
+          </div>
+
+          <div className="mode-switch-card">
+            <div>
+              <p className="mode-switch-label">
+                {user.active_profile_mode === "family"
+                  ? "Family mode is active"
+                  : "Personal mode is active"}
+              </p>
+              <p className="mode-switch-copy">
+                Personal mode keeps meal plans just for you. Family mode shares
+                one plan and one shopping list with your family.
+              </p>
+            </div>
+
+            <div className="button-row">
+              <button
+                className={`button ${
+                  user.active_profile_mode === "solo"
+                    ? "button-primary"
+                    : "button-ghost"
+                }`}
+                type="button"
+                onClick={() => handleModeChange("solo")}
+                disabled={isUpdatingMode}
+              >
+                Use personal plan
+              </button>
+              <button
+                className={`button ${
+                  user.active_profile_mode === "family"
+                    ? "button-primary"
+                    : "button-ghost"
+                }`}
+                type="button"
+                onClick={() => handleModeChange("family")}
+                disabled={isUpdatingMode}
+              >
+                Use family plan
+              </button>
+            </div>
+          </div>
+        </section>
 
         <section className="food-profile-summary">
           <div className="food-profile-summary-heading">

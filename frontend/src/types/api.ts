@@ -2,6 +2,7 @@ export type User = {
   id: number;
   email: string;
   name: string | null;
+  active_profile_mode: string;
 };
 
 export type LoginPayload = {
@@ -68,10 +69,35 @@ export type MealPlanItem = {
 
 export type MealPlan = {
   id: number;
-  user_id: number;
+  user_id: number | null;
+  family_id?: number | null;
   title: string;
   notes: string | null;
   items: MealPlanItem[];
+};
+
+export type Family = {
+  id: number;
+  name: string;
+};
+
+export type FamilyInvite = {
+  id: number;
+  family_id: number;
+  email: string;
+  status: string;
+};
+
+export type FamilyMember = {
+  id: number;
+  family_id: number;
+  user_id: number;
+  role: string;
+  user: {
+    id: number;
+    name: string | null;
+    email: string;
+  };
 };
 
 export type ShoppingListItem = {

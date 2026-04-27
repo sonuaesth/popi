@@ -1,5 +1,5 @@
 from fastapi import APIRouter, Depends, HTTPException, status
-from sqlalchemy.orm import Session
+from sqlalchemy.orm import Session, selectinload
 
 from app.db.dependencies import get_current_user, get_db
 from app.models.family import Family, FamilyInvite, FamilyMember
@@ -159,6 +159,7 @@ def get_family_members(
 
     return (
         db.query(FamilyMember)
+        .options(selectinload(FamilyMember.user))
         .filter(FamilyMember.family_id == membership.family_id)
         .all()
     )
@@ -178,5 +179,19 @@ def get_family_invites(
     return (
         db.query(FamilyInvite)
         .filter(FamilyInvite.family_id == membership.family_id)
+        .all()
+    )
+
+@router.get("/invites/me", response_model=list[FamilyInviteRead])
+def get_my_family_invites(
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user),
+):
+    return (
+        db.query(FamilyInvite)
+        .filter(
+            FamilyInvite.email == current_user.email,
+            FamilyInvite.status == "pending",
+        )
         .all()
     )

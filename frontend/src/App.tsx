@@ -8,6 +8,7 @@ import DashboardPage from "./pages/DashboardPage";
 import MealItemPage from "./pages/MealItemPage";
 import ProfilePage from "./pages/ProfilePage";
 import RatingsPage from "./pages/RatingsPage";
+import FamilyPage from "./pages/FamilyPage";
 import type { User } from "./types/api";
 
 function App() {
@@ -68,7 +69,20 @@ function App() {
       <Route path="/meal-items/:itemId" element={<MealItemPage onLogout={handleLogout} />} />
       <Route path="/onboarding" element={<OnboardingPage user={user} onLogout={handleLogout} />} />
       <Route path="/ratings" element={<RatingsPage />} />
-      <Route path="/profile" element={<ProfilePage user={user} onLogout={handleLogout} />} />
+      <Route
+        path="/family"
+        element={<FamilyPage user={user} />}
+      />
+      <Route
+        path="/profile"
+        element={
+          <ProfilePage
+            user={user}
+            onLogout={handleLogout}
+            onUserUpdate={setUser}
+          />
+        }
+      />
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
   );

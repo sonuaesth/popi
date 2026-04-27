@@ -57,6 +57,7 @@ function MealItemPage({ onLogout }: MealItemPageProps) {
           <strong>Popi</strong>
           <Link to="/">Today</Link>
           <Link to="/ratings">Ratings</Link>
+          <Link to="/family">Family</Link>
           <Link to="/profile">Profile</Link>
           <button
             className="button button-ghost"

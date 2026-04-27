@@ -62,6 +62,7 @@ useEffect(() => {
           <strong>Popi</strong>
           <Link to="/">Today</Link>
           <Link to="/ratings">Ratings</Link>
+          <Link to="/family">Family</Link>
           <Link to="/profile">Profile</Link>
         </nav>
 

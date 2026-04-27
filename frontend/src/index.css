@@ -398,6 +398,34 @@ button {
   min-width: 180px;
 }
 
+.mode-switch-card,
+.family-hero-card,
+.family-section-card {
+  display: grid;
+  gap: 18px;
+  padding: 22px;
+  border: 1px solid var(--color-border);
+  border-radius: 24px;
+  background: rgba(255, 255, 255, 0.58);
+}
+
+.mode-switch-label {
+  margin: 0;
+  color: var(--color-plum);
+  font-family: var(--font-body);
+  font-size: 1.7rem;
+  line-height: 1;
+}
+
+.mode-switch-copy,
+.family-hero-card p,
+.family-summary-copy p,
+.family-empty-copy {
+  margin: 0;
+  color: var(--color-muted);
+  line-height: 1.6;
+}
+
 .food-profile-summary,
 .food-preferences-summary {
   display: grid;
@@ -513,6 +541,92 @@ button {
 }
 
 .profile-bottom-actions .button {
+  min-width: 160px;
+}
+
+.family-page-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+  margin-top: 28px;
+}
+
+.family-section-wide {
+  grid-column: 1 / -1;
+}
+
+.family-hero-card {
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: end;
+  margin-bottom: 24px;
+}
+
+.family-hero-card .eyebrow,
+.family-section-header .eyebrow {
+  margin: 0 0 10px;
+  color: var(--color-cocoa);
+}
+
+.family-hero-card h3,
+.family-section-card h3 {
+  margin: 0;
+  color: var(--color-plum);
+  font-family: var(--font-body);
+  font-size: 2rem;
+  line-height: 1;
+}
+
+.family-list {
+  display: grid;
+  gap: 12px;
+}
+
+.family-list-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 14px 16px;
+  border: 1px solid rgba(59, 57, 35, 0.14);
+  border-radius: 14px;
+  background: rgba(251, 247, 238, 0.72);
+}
+
+.family-list-item strong {
+  display: block;
+  color: var(--color-ink);
+  font-size: 1rem;
+}
+
+.family-list-item p {
+  margin: 6px 0 0;
+  color: var(--color-muted);
+  line-height: 1.5;
+}
+
+.family-role-badge {
+  flex: 0 0 auto;
+  border: 1px solid rgba(59, 57, 35, 0.18);
+  border-radius: 999px;
+  padding: 8px 12px;
+  color: var(--color-olive);
+  font-size: 0.8rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  background: rgba(215, 222, 220, 0.72);
+}
+
+.family-form {
+  display: grid;
+  gap: 14px;
+}
+
+.family-inline-form {
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: end;
+}
+
+.family-inline-form .button {
   min-width: 160px;
 }
 
@@ -1000,6 +1114,29 @@ button {
 
   .profile-main-actions .button,
   .profile-bottom-actions .button {
+    width: 100%;
+  }
+
+  .family-page-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .family-section-wide {
+    grid-column: auto;
+  }
+
+  .family-hero-card,
+  .family-inline-form {
+    grid-template-columns: 1fr;
+  }
+
+  .family-list-item {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .family-list-item .button,
+  .family-hero-card .button {
     width: 100%;
   }
 
