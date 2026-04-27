@@ -22,6 +22,11 @@ class Family(Base):
         cascade="all, delete-orphan",
     )
 
+    meal_plans = relationship(
+        "MealPlan",
+        back_populates="family",
+        cascade="all, delete-orphan",
+    )
 
 class FamilyMember(Base):
     __tablename__ = "family_members"

@@ -9,14 +9,22 @@ class MealPlan(Base):
     __tablename__ = "meal_plans"
 
     id: Mapped[int] = mapped_column(primary_key=True)
-    user_id: Mapped[int] = mapped_column(
+    user_id: Mapped[int | None] = mapped_column(
         ForeignKey("users.id", ondelete="CASCADE"),
         index=True,
+        nullable=True,
+    )
+
+    family_id: Mapped[int | None] = mapped_column(
+        ForeignKey("families.id", ondelete="CASCADE"),
+        index=True,
+        nullable=True,
     )
     title: Mapped[str] = mapped_column(String(255), default="Meal plan")
     notes: Mapped[str | None] = mapped_column(Text, nullable=True)
 
     user = relationship("User", back_populates="meal_plans")
+    family = relationship("Family", back_populates="meal_plans")
     items = relationship(
         "MealPlanItem",
         back_populates="meal_plan",
